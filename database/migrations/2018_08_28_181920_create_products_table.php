@@ -15,7 +15,10 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('spot_id')->unsigned();           
+            $table->unsignedInteger('spot_id'); 
+            $table->foreign('spot_id')
+                  ->references('id')->on('spots')
+                  ->onDelete('cascade');          
             $table->string('name');
             $table->string('price');
             $table->string('ingredients');
@@ -31,8 +34,6 @@ class CreateProductsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('products');
-         $table->foreign('spot_id')
-                  ->refrences('id')->on('spots')
-                  ->onDelete('cascade');
+        
     }
 }
