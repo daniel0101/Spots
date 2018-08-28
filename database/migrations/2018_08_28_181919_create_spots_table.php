@@ -15,8 +15,6 @@ class CreateSpotsTable extends Migration
     {
         Schema::create('spots', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('address');
             $table->unsignedInteger('user_id');            
             $table->unsignedInteger('location_id'); 
             $table->foreign('user_id')
@@ -24,7 +22,9 @@ class CreateSpotsTable extends Migration
                   ->onDelete('cascade');
              $table->foreign('location_id')
                   ->references('id')->on('locations')
-                  ->onDelete('cascade');          
+                  ->onDelete('cascade');
+            $table->string('name');
+            $table->string('address');
             $table->string('phone_no');
             $table->string('avatar');
             $table->timestamps();
