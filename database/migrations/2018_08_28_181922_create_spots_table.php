@@ -17,8 +17,8 @@ class CreateSpotsTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('address');
-            $table->integer('user_id');
-            $table->integer('location_id');
+            $table->integer('user_id')->unsigned();            
+            $table->integer('location_id')->unsigned();           
             $table->string('phone_no');
             $table->string('avatar');
             $table->timestamps();
@@ -33,5 +33,11 @@ class CreateSpotsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('spots');
+        $table->foreign('user_id')
+                  ->references('id')->on('users')
+                  ->onDelete('cascade');
+         $table->foreign('location_id')
+                  ->references('id')->on('locations')
+                  ->onDelete('cascade');
     }
 }
