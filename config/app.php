@@ -80,6 +80,7 @@ return [
 
     'locale' => 'en',
 
+    'faker_locale' => 'en_NG',
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale
