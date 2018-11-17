@@ -19,3 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/spots', 'SpotController@index');
 Route::get('/spots/{id}', 'SpotController@show');
+Route::get('/spots/{id}/user', 'SpotController@user');
+Route::get('/spots/{id}/location', 'SpotController@location');

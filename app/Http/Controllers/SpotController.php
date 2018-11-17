@@ -14,7 +14,7 @@ class SpotController extends Controller
      */
     public function index()
     {
-        $spots = Spot::latest();
+        $spots = Spot::latest()->get();
         return response()->json($spots,200);
     }
 
@@ -36,8 +36,10 @@ class SpotController extends Controller
      */
     public function store(Request $request)
     {
-       
+       //save images to cloudinary --later
     }
+
+
 
     /**
      * Display the specified resource.
@@ -83,5 +85,26 @@ class SpotController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * finds the User that created this particular Spot
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function user($id)
+    {
+       return response()->json(Spot::findOrFail($id)->user,200);
+    }
+
+
+    /**
+     * finds the Location of a particular Spot
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function location($id)
+    {
+       return response()->json(Spot::findOrFail($id)->location,200);
     }
 }
