@@ -16,4 +16,8 @@ class Spot extends Model
     public function location(){
         return $this->belongsTo(Location::class);
     }
+
+    public function images(){
+        return $this->hasMany(SpotImage::class);
+    }
 }
