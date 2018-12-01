@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Spot;
+use Cloudder;
 
 class SpotController extends Controller
 {
@@ -36,7 +37,31 @@ class SpotController extends Controller
      */
     public function store(Request $request)
     {
-       //save images to cloudinary --later
+        $request->validate([
+            'location_id'=>'required',
+            'name'=>'required',
+            'address'=>'required',
+            'phone'=>'required|digits:11',
+            'avatar'=>'required|image',
+        ]);
+        
+       $spot = Spot::create([
+            'user_id'=>'',
+            'location_id'=>$request->location_id,
+            'name'=>$request->name,
+            'address'=>$request->address,
+            'phone_no'=>$request->phone_no,
+            'avatar'=>'',
+       ]);
+       //upload image to cloudinary here --cloudder laravel wrapper :)
+       $result = (object) $this->uploadImage($request->avatar->getPathName(),null,[],['spot',$request->name]);
+       SpotImage::create([
+           'spot_id'=>$spot->id,
+           'publicId'=>$result->public_id,
+           'image_url'=>$result->image_url,
+           'status'=>'uploaded'
+       ]);
+       return response()->json(['message'=>'Resource created succesfully!'],200);
     }
 
 
@@ -106,5 +131,10 @@ class SpotController extends Controller
     public function location($id)
     {
        return response()->json(Spot::findOrFail($id)->location,200);
+    }
+    
+    public function uploadImage($filename,array $tag){
+        $response = Cloudder::upload($filename,null,[],$tags);
+        return $response->getResult();
     }
 }
