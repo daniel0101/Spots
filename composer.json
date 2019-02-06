@@ -10,7 +10,7 @@
         "jrm2k6/cloudder": "^0.6.0",
         "laravel/framework": "5.7.*",
         "laravel/tinker": "^1.0",
-        "tymon/jwt-auth": "^0.5.12"
+        "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {
         "filp/whoops": "^2.0",
