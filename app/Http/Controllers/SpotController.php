@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Spot;
+use App\Spot,App\SpotImage;
 use Cloudder;
+use Auth;
 
 class SpotController extends Controller
 {
+    public function __construct(){
+        
+    }
     /**
      * Display a listing of the resource.
      *
@@ -44,23 +48,21 @@ class SpotController extends Controller
             'phone'=>'required|digits:11',
             'avatar'=>'required|image',
         ]);
-        
+        // dd(Auth::user()->id);
+        // dd($request->all());
        $spot = Spot::create([
-            'user_id'=>'',
+            'user_id'=>Auth::user()->id,
             'location_id'=>$request->location_id,
             'name'=>$request->name,
             'address'=>$request->address,
-            'phone_no'=>$request->phone_no,
+            'phone_no'=>$request->phone,
             'avatar'=>'',
        ]);
        //upload image to cloudinary here --cloudder laravel wrapper :)
-       $result = (object) $this->uploadImage($request->avatar->getPathName(),null,[],['spot',$request->name]);
-       SpotImage::create([
-           'spot_id'=>$spot->id,
-           'publicId'=>$result->public_id,
-           'image_url'=>$result->image_url,
-           'status'=>'uploaded'
-       ]);
+       if($request->hasFile('avatar') && $request->file('avatar')->isValid()){
+            $result = $this->uploadImage($request->avatar,['spot',$request->name]);    
+            $this->spotImage($spot,$result);     
+        }          
        return response()->json(['message'=>'Resource created succesfully!'],200);
     }
 
@@ -133,8 +135,18 @@ class SpotController extends Controller
        return response()->json(Spot::findOrFail($id)->location,200);
     }
     
-    public function uploadImage($filename,array $tag){
+    public function uploadImage($filename,array $tags){
         $response = Cloudder::upload($filename,null,[],$tags);
-        return $response->getResult();
+        return (object) $response->getResult();
+    }
+
+    public function spotImage($spot, $result){
+        // dd($result);
+        return SpotImage::create([
+                'spot_id'=>$spot->id,
+                'publicId'=>$result->public_id,
+                'image_url'=>$result->secure_url,
+                'status'=>'uploaded'
+            ]);
     }
 }
