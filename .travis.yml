@@ -4,7 +4,7 @@ os:
 language: php
 
 php:
-  - '7.2'
+  - '7.2.10'
   
 before_script:
   - composer self-update
@@ -14,6 +14,6 @@ before_script:
   - phpenv rehash
   - nvm install 10.13.0
   - npm install
-  
+
 script:
   - phpunit
