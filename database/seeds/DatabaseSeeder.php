@@ -11,6 +11,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        // $this->call([
+        //     UsersTableSeeder::class,
+        //     // ]);
+        factory(App\User::class,20)->create();
+        factory(App\Location::class,20)->create()->each(function($location){
+            factory(App\Spot::class,5)->create([
+                'user_id'=>App\User::all()->random()->id,
+                'location_id'=>$location->id,
+            ])->each(function($spot){
+                $spot->update([
+                    'user_id'=>App\User::all()->random()->id
+                ]);
+            });
+        });                
     }
 }
